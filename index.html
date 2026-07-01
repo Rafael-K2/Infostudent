@@ -798,20 +798,3 @@ document.querySelectorAll('.modal').forEach(m=> m.addEventListener('click', (e)=
 
 // Expose some functions to global for button onclick in markup
 window.openCardapio = openCardapio; window.openEventos = openEventos; window.openFrequencia = openFrequencia; window.openRefeitorio = openRefeitorio; window.openIdentificacao = openIdentificacao; window.closeModal = closeModal; window.continuarIdentificacao = continuarIdentificacao; window.avaliarAnonimo = avaliarAnonimo; window.registrarRef = registrarRef;
-const canal = new EventSource("http://infostudant.netlify.app/eventos-sse");
-
-canal.onmessage = (e) => {
-    const evento = JSON.parse(e.data);
-
-    if (evento.tipo === "frequencia" || evento.tipo === "refeitorio") {
-        atualizarDados(); // chame a função que já recarrega os dados da tela
-    }
-};
-
-canal.onerror = () => {
-    // Reconecta automaticamente — o navegador faz isso sozinho com SSE
-    console.log("SSE reconectando...");
-};
-</script>
-</body>
-</html>
