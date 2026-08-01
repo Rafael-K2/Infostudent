@@ -1252,6 +1252,31 @@ async function verificarConfig(){
   if(btn) btn.style.display = avaliacoesAtivas ? '' : 'none';
 }
 
+function withBackoff(fn, baseDelay=1000, maxDelay=8000, attempt=0){
+  return new Promise((resolve)=>{
+    const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
+    setTimeout(async()=>{
+      try{ resolve(await fn()); }
+      catch(e){ resolve(null); }
+    }, delay);
+  });
+}
+
+async function verificarConfigComRetry(){
+  let attempt = 0;
+  while(attempt < 4){
+    const cfg = await apiGet('/config', null);
+    if(cfg){
+      avaliacoesAtivas = cfg.avaliacoes_ativas !== false;
+      const btn = document.getElementById('btnStart');
+      if(btn) btn.style.display = avaliacoesAtivas ? '' : 'none';
+      return;
+    }
+    attempt += 1;
+    await withBackoff(()=>Promise.resolve(null), 1000, 4000, attempt);
+  }
+}
+
 // ---------- Cardápio ----------
 async function openCardapio(){ playUiSound('open'); document.getElementById('modalCardapio').style.display='flex'; loadCardapio(); }
 function closeModal(id){
@@ -1578,8 +1603,8 @@ async function verificarApi(){
   }
 }
 verificarApi();
-verificarConfig();
-setInterval(verificarConfig, 30000);
+verificarConfigComRetry();
+setInterval(verificarConfigComRetry, 30000);
 
 // Close modals on backdrop click
 document.querySelectorAll('.modal').forEach(m=> m.addEventListener('click', (e)=>{ if(e.target===m) m.style.display='none' }));
