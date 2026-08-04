@@ -39,9 +39,6 @@ html,body{height:100%;margin:0;background:var(--bg-main);color:var(--fg-text);tr
 .footer-note{margin-top:30px;font-style:italic;color:var(--frase-fg);font-size:13.5px}
 .api-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font-size:13px;color:var(--frase-fg)}
 .api-dot{width:9px;height:9px;border-radius:50%;background:#4caf50;display:inline-block;box-shadow:0 0 0 3px rgba(76,175,80,.18)}
-.theme-toggle{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease}
-.theme-toggle:hover{background:rgba(255,255,255,.16)}
-.theme-toggle svg{width:18px;height:18px}
 @media(max-width:480px){.card-row{grid-template-columns:repeat(2,1fr)}#btnStart{width:100%;padding:18px 24px;font-size:18px}}
 /* Modals */
 .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);z-index:40}
@@ -78,15 +75,15 @@ html,body{height:100%;margin:0;background:var(--bg-main);color:var(--fg-text);tr
 #modalEventos #evtTitulo{font-size:14px;color:var(--frase-fg);font-weight:700;margin:0 0 8px;text-transform:uppercase;letter-spacing:.4px}
 #modalEventos #evtTexto{font-size:15px;color:var(--fg-text);font-weight:600}
 
-#modalEventos .mes-nav{display:flex;align-items:center;gap:6px;margin:0 18px;padding:6px;background:var(--entry-bg);border:1px solid var(--border-grid);border-radius:14px}
+#modalEventos .mes-nav{display:flex;align-items:center;gap:6px;margin:0 18px;padding:6px;background:var(--entry-bg);border:1px solid rgba(121,198,143,.18);border-radius:14px}
 #modalEventos .mes-nav button{flex-shrink:0;width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--fg-text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease, opacity .15s ease}
 #modalEventos .mes-nav button:hover:not(:disabled){background:var(--bg-card-hover)}
 #modalEventos .mes-nav button:disabled{opacity:.25;cursor:default}
-#modalEventos .mes-nav-track{flex:1;display:flex;gap:4px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;padding:2px 0}
+#modalEventos .mes-nav-track{flex:1;display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;padding:2px 0}
 #modalEventos .mes-nav-track::-webkit-scrollbar{display:none}
-#modalEventos .mes-nav-item{flex-shrink:0;padding:7px 14px;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--frase-fg);cursor:pointer;transition:background .15s ease, color .15s ease, transform .15s ease;user-select:none}
-#modalEventos .mes-nav-item:hover{color:var(--fg-text)}
-#modalEventos .mes-nav-item.ativo{background:var(--accent-vibrant);color:#fff;transform:scale(1.05)}
+#modalEventos .mes-nav-item{flex-shrink:0;padding:10px 16px;border-radius:14px;font-size:14px;font-weight:700;letter-spacing:.5px;color:#c8e7ce;background:rgba(255,255,255,.03);border:1px solid transparent;cursor:pointer;transition:background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease;user-select:none}
+#modalEventos .mes-nav-item:hover{color:var(--fg-text);background:rgba(255,255,255,.08);border-color:rgba(121,198,143,.18)}
+#modalEventos .mes-nav-item.ativo{background:linear-gradient(135deg, #1f8d44, #35b95d);color:#fff;transform:scale(1.03);box-shadow:0 10px 22px rgba(0,0,0,.18);border-color:transparent}
 
 /* ===== Cardápio Modal — visual only, no logic changes ===== */
 #modalCardapio .sheet{max-width:760px;background:var(--bg-main);border:0;padding:0;border-radius:18px;overflow:hidden}
@@ -487,27 +484,40 @@ body::after{bottom:-80px;left:-80px}
 }
 label{
   display:block;
-  margin-bottom:8px;
-  color:#b4dcc0;
-  font-size:12px;
+  margin-bottom:10px;
+  color:#d2edcb;
+  font-size:13px;
   font-weight:800;
-  letter-spacing:.7px;
+  letter-spacing:.75px;
 }
 .input,select{
   width:100%;
   height:54px;
-  padding:0 16px;
-  border-radius:16px;
-  border:1px solid rgba(121,198,143,.14);
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  color:var(--fg-text);
+  padding:0 18px;
+  border-radius:18px;
+  border:1px solid rgba(121,198,143,.28);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+  color:#f4ffef;
+  font-size:15px;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
   outline:none;
-  transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease, background .2s ease;
+}
+.input::-ms-expand,
+select::-ms-expand{
+  display:none;
+}
+.input option,
+select option{
+  background:rgba(15,27,18,.98);
+  color:#f4ffef;
 }
 .input:focus,
 select:focus{
-  border-color:rgba(61,220,132,.44);
-  box-shadow:0 0 0 4px rgba(61,220,132,.1);
+  border-color:rgba(61,220,132,.55);
+  box-shadow:0 0 0 5px rgba(61,220,132,.14);
   transform:translateY(-1px);
 }
 .btn{
@@ -592,34 +602,36 @@ select:focus{
   box-shadow:0 16px 28px rgba(0,0,0,.14);
 }
 .eval-card-title{
-  font-size:18px;
-  font-weight:800;
-  color:var(--fg-text);
+  font-size:20px;
+  font-weight:900;
+  color:#f4ffef;
+  line-height:1.35;
 }
 .eval-card-hint{
-  margin-top:4px;
-  font-size:13px;
-  color:#92c4a3;
+  margin-top:6px;
+  font-size:14px;
+  color:#d7e9cc;
+  line-height:1.65;
 }
 .stars{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
-  margin-top:14px;
+  margin-top:16px;
 }
 .stars button{
-  width:54px;
-  height:54px;
+  width:56px;
+  height:56px;
   border-radius:16px;
-  border:1px solid rgba(121,198,143,.12);
-  background:rgba(255,255,255,.04);
-  color:#78bf91;
-  font-size:24px;
+  border:1px solid rgba(121,198,143,.14);
+  background:rgba(255,255,255,.06);
+  color:#d7f1c9;
+  font-size:26px;
   transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
 }
 .stars button:hover{
   transform:translateY(-2px) scale(1.04);
-  background:rgba(61,220,132,.08);
+  background:rgba(61,220,132,.1);
 }
 .stars button.active{
   color:#fff;
@@ -627,17 +639,33 @@ select:focus{
   border-color:transparent;
   box-shadow:0 14px 22px rgba(24,138,67,.24);
 }
+.star-no-rate{
+  margin-top:12px;
+  padding:10px 16px;
+  border:1px solid rgba(121,198,143,.18);
+  border-radius:16px;
+  background:rgba(255,255,255,.05);
+  color:#d8f1c3;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .18s ease, transform .18s ease, border-color .18s ease;
+}
+.star-no-rate:hover{
+  background:rgba(61,220,132,.12);
+  transform:translateY(-1px);
+}
 .eval-actions{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:16px;
+  gap:20px;
   margin-top:18px;
-  padding:16px 4px 4px;
+  padding:18px 4px 4px;
 }
 .eval-meta{
-  color:#98cba8;
-  font-size:13px;
+  color:#e5f4dc;
+  font-size:14px;
   font-weight:700;
 }
 .scanner-frame,
@@ -943,11 +971,6 @@ select:focus{
       <div class="subtitle">Escola Estadual de Educa&ccedil;&atilde;o Profissional</div>
     </div>
   </div>
-  <div>
-    <button id="btnTheme" class="theme-toggle" title="Alternar tema" aria-label="Alternar tema">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-  </div>
 </div>
 <div class="container">
   <div class="center">
@@ -958,12 +981,12 @@ select:focus{
       <button id="btnStart" class="btn primary" onclick="openIdentificacao()">INICIAR AVALIA&Ccedil;&Atilde;O</button>
     </div>
     <div class="card-row">
-      <div class="card" onclick="openCardapio()">
-        <div class="card-tag">Hoje</div>
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line><line x1="8" y1="9" x2="10" y2="9"></line></svg></div>
-        <span class="small">Card&aacute;pio</span>
-        <div class="small-muted">Ver o card&aacute;pio semanal</div>
-        <div class="card-cta">Abrir agora</div>
+      <div class="card" onclick="openFrequencia()">
+        <div class="card-tag">Presen&ccedil;a</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a4 4 0 0 1 4-4h2.5"></path><circle cx="17" cy="17" r="3.5"></circle><path d="m15.7 17.3 1 1L18.5 16"></path></svg></div>
+        <span class="small">Frequ&ecirc;ncia</span>
+        <div class="small-muted">Registrar presen&ccedil;a</div>
+        <div class="card-cta">Registrar em 1 toque</div>
       </div>
       <div class="card" onclick="openEventos()">
         <div class="card-tag">Agenda</div>
@@ -972,12 +995,12 @@ select:focus{
         <div class="small-muted">Calend&aacute;rio escolar</div>
         <div class="card-cta">Ver destaques</div>
       </div>
-      <div class="card" onclick="openFrequencia()">
-        <div class="card-tag">Presen&ccedil;a</div>
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a4 4 0 0 1 4-4h2.5"></path><circle cx="17" cy="17" r="3.5"></circle><path d="m15.7 17.3 1 1L18.5 16"></path></svg></div>
-        <span class="small">Frequ&ecirc;ncia</span>
-        <div class="small-muted">Registrar presen&ccedil;a</div>
-        <div class="card-cta">Registrar em 1 toque</div>
+      <div class="card" onclick="openCardapio()">
+        <div class="card-tag">Hoje</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line><line x1="8" y1="9" x2="10" y2="9"></line></svg></div>
+        <span class="small">Card&aacute;pio</span>
+        <div class="small-muted">Ver o card&aacute;pio semanal</div>
+        <div class="card-cta">Abrir agora</div>
       </div>
     </div>
     <div class="footer-note">Sua participa&ccedil;&atilde;o &eacute; fundamental para melhorarmos juntos.</div>
@@ -1066,7 +1089,6 @@ select:focus{
           <div id="cardHoraFreq" class="small-muted" style="margin-top:6px"></div>
         </div>
       </div>
-      <input id="manualInputFrequencia" class="input" placeholder='Cole aqui o conteúdo do QR ou digite matrícula e pressione Enter' />
     </div>
     <div class="scanner-side">
       <div class="scanner-side-card row">
@@ -1150,23 +1172,6 @@ function resolveServerUrl() {
   return '';
 }
 let SERVER_URL = "https://marwin-api-uuul.onrender.com";
-// Tema
-const TEMAS = {
-  claro: {BG_MAIN:"#f2f8f2",BG_CARD:"#ffffff",BG_CARD_HOVER:"#eaf4ea",ACCENT_VIBRANT:"#1b5e20",ACCENT_SOFT:"#388e3c",FG_TEXT:"#1a2a1a",BORDER_GRID:"#c8e6c9",HIGHLIGHT_YELLOW:"#f9a825",OBS_BG:"#e8f5e9",BTN_CARDAPIO:"#2e7d32",FRASE_FG:"#4a7a4a",ENTRY_BG:"#f0f8f0",BTN_VOLTAR:"#1b5e20",HEADER_GRAD_START:"#1b5e20",HEADER_GRAD_END:"#2e7d32",ICON_BG:"#e8f5e9"},
-  escuro: {BG_MAIN:"#0d1410",BG_CARD:"#161f1a",BG_CARD_HOVER:"#1c2620",ACCENT_VIBRANT:"#1f6b34",ACCENT_SOFT:"#2e8b3f",FG_TEXT:"#eaf3ec",BORDER_GRID:"#23362a",HIGHLIGHT_YELLOW:"#f9a825",OBS_BG:"#15301d",BTN_CARDAPIO:"#2e7d32",FRASE_FG:"#7fb88f",ENTRY_BG:"#16201a",BTN_VOLTAR:"#1b5e20",HEADER_GRAD_START:"#0f3d20",HEADER_GRAD_END:"#155c2c",ICON_BG:"#15301d"}
-};
-let temaAtual = localStorage.getItem('MARWIN_TEMA') || 'escuro';
-const ICON_LUA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-const ICON_SOL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>';
-function aplicarTema(t){
-  const tema = TEMAS[t] || TEMAS.escuro;
-  Object.keys(tema).forEach(k=> document.documentElement.style.setProperty('--' + k.replace('_','-').toLowerCase(), tema[k]));
-  const btn = document.getElementById('btnTheme');
-  if(btn) btn.innerHTML = (t==='claro') ? ICON_LUA : ICON_SOL;
-}
-aplicarTema(temaAtual);
-
-document.getElementById('btnTheme').addEventListener('click', ()=>{ temaAtual = temaAtual==='claro'?'escuro':'claro'; localStorage.setItem('MARWIN_TEMA', temaAtual); aplicarTema(temaAtual); playUiSound('click'); });
 
 let audioCtx = null;
 let uiSoundGain = null;
@@ -1383,21 +1388,50 @@ const AVAL_ITENS = {
   1: ["Almoço-Segunda","Almoço-Terça","Almoço-Quarta","Almoço-Quinta","Almoço-Sexta","Merenda da manhã-Todos os dias","Merenda da tarde-Todos os dias"],
   2: ["Salas de Aula","Refeitório","Banheiros","Auditório","Laboratórios"],
   3: ["Linguagens","Humanas","Ciências da natureza","Matemática"],
-  4: ["O quão acolhido você foi na escola ?","O quão respeitado(@) você é nessa escola ?","Se você precisou de ajuda da coordenação,\ncomo avalia a rapidez e a atenção do atendimento?","Qual foi o melhor almoço da semana?"]
+  4: ["O quão acolhido você foi na escola ?","O quão respeitado(@) você é nessa escola ?","Se você precisou de ajuda da coordenação,\ncomo avalia a rapidez e a atenção do atendimento?"]
+};
+const COMIDA_MODOS = {
+  'sempre como na escola': {
+    label: 'Sempre como na escola',
+    items: ["Almoço-Segunda","Almoço-Terça","Almoço-Quarta","Almoço-Quinta","Almoço-Sexta","Merenda da manhã-Todos os dias","Merenda da tarde-Todos os dias"],
+    showFavorite: true,
+    skipFood: false
+  },
+  'não como na escola': {
+    label: 'Não como na escola',
+    items: [],
+    showFavorite: false,
+    skipFood: true
+  },
+  'só merendo na escola': {
+    label: 'Só merendo na escola',
+    items: ["Merenda da manhã-Todos os dias","Merenda da tarde-Todos os dias"],
+    showFavorite: false,
+    skipFood: false
+  },
+  'só almoço na escola': {
+    label: 'Só almoço na escola',
+    items: ["Almoço-Segunda","Almoço-Terça","Almoço-Quarta","Almoço-Quinta","Almoço-Sexta"],
+    showFavorite: true,
+    skipFood: false
+  }
 };
 const TITULOS = {1:"🍽️ COMIDA",2:"🧹 LIMPEZA",3:"📚 ENSINO",4:"✨ EXPERIÊNCIA"};
 const SUB = {1:"Avalie a qualidade das refeições",2:"Avalie a higiene dos ambientes",3:"Avalie a qualidade do ensino",4:"Conte-nos como você se sentiu nesta semana"};
 // Ordem de navegação do wizard: Comida → Limpeza → Experiência → Ensino (por último, e opcional).
 // Os números 1-4 continuam sendo o rótulo "estagio" salvo no banco; só a ordem de exibição mudou.
 const ORDEM_ESTAGIOS = [1, 2, 4, 3];
-let avaliacaoState = {nome:'',serie:'',curso:'',passo:0,respostas:{}};
+let avaliacaoState = {nome:'',serie:'',curso:'',passo:0,respostas:{}, comidaModo:'sempre como na escola'};
+function getComidaAvaliacaoConfig(){
+  return COMIDA_MODOS[avaliacaoState.comidaModo] || COMIDA_MODOS['sempre como na escola'];
+}
 function openIdentificacao(){ if(!avaliacoesAtivas){ alert('As avaliações estão desativadas no momento.'); return; } playUiSound('open'); document.getElementById('modalIdentificacao').style.display='flex'; }
-function avaliarAnonimo(){ playUiSound('open'); avaliacaoState = {nome:'anonimo',serie:'N/A',curso:'N/A',passo:0,respostas:{}}; document.getElementById('modalIdentificacao').style.display='none'; openAvaliacao(); }
+function avaliarAnonimo(){ playUiSound('open'); avaliacaoState = {nome:'anonimo',serie:'N/A',curso:'N/A',passo:0,respostas:{}, comidaModo:'sempre como na escola'}; document.getElementById('modalIdentificacao').style.display='none'; openAvaliacao(); }
 async function continuarIdentificacao(){ const nome=document.getElementById('nomeAluno').value.trim(); const serie=document.getElementById('serieAluno').value; const curso=document.getElementById('cursoAluno').value; if(!nome || !serie || !curso){ alert('Preencha todos os campos!'); playUiSound('error'); return }
   // verificar se já avaliou
   const resp = await apiGet(`/avaliacao/verificar?nome=${encodeURIComponent(nome)}`, {ja_avaliou:false});
   if(resp && resp.ja_avaliou){ alert('Você já avaliou esta semana!'); playUiSound('error'); return }
-  avaliacaoState = {nome,serie,curso,passo:0,respostas:{}}; document.getElementById('modalIdentificacao').style.display='none'; openAvaliacao(); }
+  avaliacaoState = {nome,serie,curso,passo:0,respostas:{}, comidaModo:'sempre como na escola'}; document.getElementById('modalIdentificacao').style.display='none'; openAvaliacao(); }
 
 function openAvaliacao(){ playUiSound('open'); document.getElementById('modalAvaliacao').style.display='flex'; renderAvaliacao(); }
 function renderAvaliacao(){ const cont = document.getElementById('avaliContent'); cont.innerHTML='';
@@ -1421,23 +1455,42 @@ function renderAvaliacao(){ const cont = document.getElementById('avaliContent')
     </div>`;
   cont.appendChild(header);
   const container = document.createElement('div'); container.className='eval-grid';
-  AVAL_ITENS[estagioAtual].forEach(item=>{
+  const comidaConfig = estagioAtual===1 ? getComidaAvaliacaoConfig() : null;
+  if(estagioAtual===1){
+    const modeCard = document.createElement('div');
+    modeCard.className = 'eval-card mode-card';
+    const modeLabel = document.createElement('div'); modeLabel.className='eval-card-title'; modeLabel.textContent='Como você almoça na escola?';
+    const modeHint = document.createElement('div'); modeHint.className='eval-card-hint'; modeHint.textContent='Essa escolha define quais itens de comida serão avaliados.';
+    const sel = document.createElement('select'); sel.className='input';
+    Object.keys(COMIDA_MODOS).forEach(key => {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = COMIDA_MODOS[key].label;
+      if(avaliacaoState.comidaModo===key) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.onchange = () => { avaliacaoState.comidaModo = sel.value; renderAvaliacao(); };
+    modeCard.appendChild(modeLabel);
+    modeCard.appendChild(modeHint);
+    modeCard.appendChild(sel);
+    cont.appendChild(modeCard);
+  }
+
+  if(estagioAtual===1 && comidaConfig.skipFood){
     const card = document.createElement('div'); card.className='eval-card';
-    const lbl = document.createElement('div'); lbl.className='eval-card-title'; lbl.textContent = item; card.appendChild(lbl);
-    const hint = document.createElement('div'); hint.className='eval-card-hint'; hint.textContent = estagioAtual===4 && /melhor almoço da semana/i.test(item) ? 'Escolha a opção que mais gostou.' : 'Toque nas estrelas para responder.';
+    const lbl = document.createElement('div'); lbl.className='eval-card-title'; lbl.textContent = 'Nenhuma avaliação de comida será feita';
+    const hint = document.createElement('div'); hint.className='eval-card-hint'; hint.textContent = 'Você escolheu não avaliar comida, então pode avançar para a próxima etapa.';
+    card.appendChild(lbl);
     card.appendChild(hint);
-    const right = document.createElement('div'); right.style.marginTop='12px';
-    if(estagioAtual===4 && /melhor almoço da semana/i.test(item)){
-      const sel = document.createElement('select'); sel.className='input';
-      const defaultOption = document.createElement('option');
-      defaultOption.value = '';
-      defaultOption.textContent = 'Selecione um dia';
-      sel.appendChild(defaultOption);
-      ['Segunda','Terça','Quarta','Quinta','Sexta','Nenhum'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o)});
-      sel.value = avaliacaoState.respostas[`${estagioAtual}|${item}`] || '';
-      sel.onchange = ()=> avaliacaoState.respostas[`${estagioAtual}|${item}`]=sel.value;
-      right.appendChild(sel);
-    }else{
+    container.appendChild(card);
+  } else {
+    const items = estagioAtual===1 ? comidaConfig.items : AVAL_ITENS[estagioAtual];
+    items.forEach(item=>{
+      const card = document.createElement('div'); card.className='eval-card';
+      const lbl = document.createElement('div'); lbl.className='eval-card-title'; lbl.textContent = item; card.appendChild(lbl);
+      const hint = document.createElement('div'); hint.className='eval-card-hint'; hint.textContent = 'Toque nas estrelas para responder.';
+      card.appendChild(hint);
+      const right = document.createElement('div'); right.style.marginTop='12px';
       const stars = document.createElement('div'); stars.className='stars';
       for(let i=1;i<=5;i++){
         const b=document.createElement('button');
@@ -1448,11 +1501,32 @@ function renderAvaliacao(){ const cont = document.getElementById('avaliContent')
         b.onclick = ()=>{ avaliacaoState.respostas[`${estagioAtual}|${item}`]=i; updateStars(stars,i); };
         stars.appendChild(b);
       }
-      // init to 3
-      if(!avaliacaoState.respostas[`${estagioAtual}|${item}`]) avaliacaoState.respostas[`${estagioAtual}|${item}`]=3; updateStars(stars,avaliacaoState.respostas[`${estagioAtual}|${item}`]); right.appendChild(stars);
+      const noRate = document.createElement('button');
+      noRate.type = 'button';
+      noRate.className = 'star-no-rate';
+      noRate.textContent = 'Não quero avaliar';
+      noRate.onclick = ()=>{ avaliacaoState.respostas[`${estagioAtual}|${item}`]=0; updateStars(stars,0); };
+      updateStars(stars,avaliacaoState.respostas[`${estagioAtual}|${item}`]);
+      right.appendChild(stars);
+      right.appendChild(noRate);
+      card.appendChild(right);
+      container.appendChild(card);
+    });
+    if(estagioAtual===1 && comidaConfig.showFavorite){
+      const favCard = document.createElement('div'); favCard.className='eval-card';
+      const favLbl = document.createElement('div'); favLbl.className='eval-card-title'; favLbl.textContent = 'Qual foi o melhor almoço da semana?';
+      const favHint = document.createElement('div'); favHint.className='eval-card-hint'; favHint.textContent = 'Escolha o dia com o melhor almoço.';
+      const favSelect = document.createElement('select'); favSelect.className='input';
+      const defaultOpt = document.createElement('option'); defaultOpt.value = ''; defaultOpt.textContent = 'Selecione um dia'; favSelect.appendChild(defaultOpt);
+      ['Segunda','Terça','Quarta','Quinta','Sexta','Nenhum'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; favSelect.appendChild(o); });
+      favSelect.value = avaliacaoState.respostas['comida|melhorAlmoco'] || '';
+      favSelect.onchange = ()=> avaliacaoState.respostas['comida|melhorAlmoco'] = favSelect.value;
+      favCard.appendChild(favLbl);
+      favCard.appendChild(favHint);
+      favCard.appendChild(favSelect);
+      container.appendChild(favCard);
     }
-    card.appendChild(right); container.appendChild(card);
-  });
+  }
   cont.appendChild(container);
   const actions = document.createElement('div'); actions.className='eval-actions';
   const ultimoObrigatorioPasso = totalEtapas - 2; // posição da Experiência (último item normal, antes do Ensino opcional)
@@ -1473,8 +1547,9 @@ function renderAvaliacao(){ const cont = document.getElementById('avaliContent')
   actions.appendChild(rightBox); cont.appendChild(actions);
 }
 function updateStars(container,val){
+  const selected = Number(val) || 0;
   Array.from(container.children).forEach((b,i)=>{
-    const ativo = i < val;
+    const ativo = i < selected;
     b.classList.toggle('active', ativo);
     b.innerHTML = '★';
     b.setAttribute('aria-pressed', ativo ? 'true' : 'false');
