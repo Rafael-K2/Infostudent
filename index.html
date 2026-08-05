@@ -1614,7 +1614,8 @@ function isFrequenciaActive(){ return document.getElementById('modalFrequencia')
 
 let freqKeyListener = (e)=>{
   if(!isFrequenciaActive()) return;
-  if(document.activeElement === document.getElementById('manualInputFrequencia')) return;
+  const manualInputFrequencia = document.getElementById('manualInputFrequencia');
+  if(manualInputFrequencia && document.activeElement === manualInputFrequencia) return;
   if(e.key === 'Enter'){
     const texto = usbHidBufferFreq.join('').trim();
     resetUsbHidBufferFreq();
@@ -1628,7 +1629,10 @@ let freqKeyListener = (e)=>{
 };
 
 window.addEventListener('keydown', freqKeyListener);
-document.getElementById('manualInputFrequencia').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const v = e.target.value.trim(); e.target.value=''; processScanFrequencia(v); } });
+const manualInputFrequencia = document.getElementById('manualInputFrequencia');
+if(manualInputFrequencia){
+  manualInputFrequencia.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const v = e.target.value.trim(); e.target.value=''; processScanFrequencia(v); } });
+}
 
 // Limpa "lixo" que o leitor USB (modo teclado) injeta em acentos quando o
 // layout do leitor não bate com o layout do Windows (gera "^" antes de
