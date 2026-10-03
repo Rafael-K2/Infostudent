@@ -142,6 +142,15 @@ html,body{height:100%;margin:0;background:var(--bg-main);color:var(--fg-text);tr
 .input,select{padding:10px;border:1px solid var(--border-grid);border-radius:6px;background:var(--entry-bg);width:100%}
 .small-muted{font-size:13px;color:var(--frase-fg)}
 
+/* ===== Pergunta "vai almoçar?" (aparece após registrar a presença) ===== */
+#almocoOverlay .almoco-box{background:var(--bg-card);border:1px solid var(--border-grid);border-radius:18px;padding:32px 36px;max-width:460px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.almoco-nome{font-size:15px;color:var(--frase-fg);margin-bottom:6px;font-weight:600}
+.almoco-pergunta{font-size:24px;font-weight:800;color:var(--fg-text);margin-bottom:22px}
+.almoco-botoes{display:flex;gap:14px;justify-content:center}
+.almoco-botoes .btn{flex:1;font-size:20px;padding:18px 0}
+.almoco-sim{background:var(--accent-vibrant);color:#fff}
+.almoco-nao{background:#3a2a2a;color:#fff;border:1px solid #6b3a3a}
+.almoco-timer{margin-top:16px;font-size:12px;color:var(--frase-fg);opacity:.8}
 /* ===== Scanner modals (Frequência / Refeitório) — visual only ===== */
 #modalFrequencia .sheet{max-width:1120px;background:var(--bg-main);border:0;padding:24px;border-radius:0}
 #modalFrequencia .topbar{display:none}
@@ -1138,6 +1147,19 @@ select:focus{
   </div>
 </div>
 
+<!-- Pergunta: vai almoçar hoje? (aparece após registrar a presença) -->
+<div id="almocoOverlay" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.65);align-items:center;justify-content:center">
+  <div class="almoco-box">
+    <div class="almoco-nome" id="almocoNome"></div>
+    <div class="almoco-pergunta">Você vai almoçar na escola hoje?</div>
+    <div class="almoco-botoes">
+      <button class="btn almoco-sim" onclick="responderAlmoco(true)">🍽️ Sim</button>
+      <button class="btn almoco-nao" onclick="responderAlmoco(false)">Não</button>
+    </div>
+    <div class="almoco-timer" id="almocoTimer"></div>
+  </div>
+</div>
+
 <!-- Modo Painel — apresentação automática (não altera nenhuma tela existente) -->
 <div id="modoPainel" aria-hidden="true">
   <div class="painel-marca">
@@ -1342,7 +1364,7 @@ async function verificarConfigComRetry(){
 async function openCardapio(){ playUiSound('open'); document.getElementById('modalCardapio').style.display='flex'; loadCardapio(); }
 function closeModal(id){
   playUiSound('close');
-  if(id==='modalFrequencia') stopCameraFrequencia();
+  if(id==='modalFrequencia'){ stopCameraFrequencia(); fecharAlmoco(); }
   document.getElementById(id).style.display='none';
 }
 async function loadCardapio(){
@@ -1744,7 +1766,7 @@ function tickScanFrequencia(){ if(!scanningFreq) return; if(videoFreq.readyState
   requestAnimationFrame(tickScanFrequencia);
 }
 
-function processScanFrequencia(text){ if(!text || text===lastScanFreq) return; lastScanFreq = text; let data=null; try{ data = JSON.parse(text) }catch(e){ data = extractFields(text) }
+function processScanFrequencia(text){ if(!text || text===lastScanFreq || almocoAberto) return; lastScanFreq = text; let data=null; try{ data = JSON.parse(text) }catch(e){ data = extractFields(text) }
   if(!data) return; data = limparDadosQR(data); if(!data.nome) data.nome = data.matricula||'Desconhecido';
   if(!data.matricula){ showCardFrequencia({nome:data.nome, serie:data.serie||'', curso:data.curso||''}, false); return; }
   showCardFrequencia(data, false); registrarFrequencia();
@@ -1753,10 +1775,43 @@ function processScanFrequencia(text){ if(!text || text===lastScanFreq) return; l
 function showCardFrequencia(data, duplicado=false){ pendingFreq = data; document.getElementById('cardIconFreq').textContent = duplicado? '⚠️' : '✅'; document.getElementById('cardMainFreq').textContent = data.nome; document.getElementById('cardSubFreq').textContent = (data.serie||'') + (data.curso? ' • '+data.curso : ''); const now = new Date(); const hora = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0'); document.getElementById('cardHoraFreq').textContent = hora; }
 
 async function registrarFrequencia(){ if(!pendingFreq) return; const payload = {matricula: pendingFreq.matricula||'', nome: pendingFreq.nome||'Desconhecido', serie: pendingFreq.serie||'N/A', curso: pendingFreq.curso||'N/A'}; const resp = await apiPost('/frequencia/registrar', payload); if(resp===null){ document.getElementById('serverStatusFreq').textContent = '✘ Servidor offline'; mostrarAviso('Não foi possível registrar a frequência', 'erro'); return }
-  if(resp.status==='ja_registrado'){ document.getElementById('cardIconFreq').textContent='⚠️'; document.getElementById('cardMainFreq').textContent = resp.nome || pendingFreq.nome; document.getElementById('cardSubFreq').textContent = `Já registrado às ${resp.hora || '?'}`; setTimeout(()=>{ resetCardFrequencia(); }, 2500); return }
-  document.getElementById('presentesFreq').textContent = resp.total_hoje || 0; document.getElementById('cardMainFreq').textContent = resp.nome || pendingFreq.nome; statsFreq.ultimos.unshift(`${resp.nome} — ${payload.serie} — ${resp.hora}`); if(statsFreq.ultimos.length>8) statsFreq.ultimos.pop(); refreshFreqList(); resetCardFrequencia(); setTimeout(()=>{ resetCardFrequencia(); }, 2500); }
+  if(resp.status==='ja_registrado'){ document.getElementById('cardIconFreq').textContent='⚠️'; document.getElementById('cardMainFreq').textContent = resp.nome || pendingFreq.nome; document.getElementById('cardSubFreq').textContent = `Já registrado às ${resp.hora || '?'}`; perguntarAlmoco(payload); setTimeout(()=>{ resetCardFrequencia(); }, 2500); return }
+  document.getElementById('presentesFreq').textContent = resp.total_hoje || 0; document.getElementById('cardMainFreq').textContent = resp.nome || pendingFreq.nome; statsFreq.ultimos.unshift(`${resp.nome} — ${payload.serie} — ${resp.hora}`); if(statsFreq.ultimos.length>8) statsFreq.ultimos.pop(); refreshFreqList(); resetCardFrequencia(); perguntarAlmoco(Object.assign({}, payload, {nome: resp.nome || payload.nome})); setTimeout(()=>{ resetCardFrequencia(); }, 2500); }
 
 function resetCardFrequencia(){ pendingFreq=null; document.getElementById('cardIconFreq').textContent='⏳'; document.getElementById('cardMainFreq').textContent='Aguardando leitura do QR...'; document.getElementById('cardSubFreq').textContent=''; document.getElementById('cardHoraFreq').textContent=''; }
+
+// ---------- Pergunta: vai almoçar hoje? ----------
+let almocoAberto = false, almocoPendente = null, almocoTimerId = null;
+function _almocoChaveHoje(){ const d = new Date(); return 'MARWIN_ALMOCO_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function _almocoLerRespondidos(){ try{ return JSON.parse(localStorage.getItem(_almocoChaveHoje()) || '[]'); }catch(e){ return []; } }
+function _almocoMarcarRespondido(m){
+  try{
+    const l = _almocoLerRespondidos(); if(!l.includes(m)) l.push(m);
+    localStorage.setItem(_almocoChaveHoje(), JSON.stringify(l));
+    Object.keys(localStorage).filter(k=>k.startsWith('MARWIN_ALMOCO_') && k!==_almocoChaveHoje()).forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+}
+function perguntarAlmoco(aluno){
+  if(!aluno || !aluno.matricula || almocoAberto) return;
+  if(_almocoLerRespondidos().includes(aluno.matricula)) return; // já respondeu hoje neste totem
+  almocoPendente = aluno; almocoAberto = true;
+  document.getElementById('almocoNome').textContent = aluno.nome || '';
+  document.getElementById('almocoOverlay').style.display = 'flex';
+  let seg = 15; const t = document.getElementById('almocoTimer');
+  t.textContent = 'Fecha em ' + seg + 's sem resposta';
+  clearInterval(almocoTimerId);
+  almocoTimerId = setInterval(()=>{ seg--; if(seg<=0){ fecharAlmoco(); } else { t.textContent = 'Fecha em ' + seg + 's sem resposta'; } }, 1000);
+}
+function fecharAlmoco(){ clearInterval(almocoTimerId); almocoTimerId = null; almocoPendente = null; almocoAberto = false; const ov = document.getElementById('almocoOverlay'); if(ov) ov.style.display = 'none'; }
+async function responderAlmoco(vai){
+  const aluno = almocoPendente; if(!aluno) return;
+  fecharAlmoco();
+  const resp = await apiPost('/almoco/registrar', {matricula: aluno.matricula, nome: aluno.nome, serie: aluno.serie, curso: aluno.curso, vai_almocar: vai ? 'sim' : 'nao'});
+  if(resp===null){ mostrarAviso('Não foi possível registrar a resposta do almoço', 'erro'); return; }
+  _almocoMarcarRespondido(aluno.matricula);
+  mostrarAviso(vai ? 'Almoço confirmado 🍽️' : 'Resposta registrada', 'info');
+}
+window.responderAlmoco = responderAlmoco;
 
 function refreshFreqList(){ const el = document.getElementById('freq-list'); el.innerHTML=''; statsFreq.ultimos.slice(0,8).forEach(s=>{ const d = document.createElement('div'); d.textContent=s; d.style.padding='6px 0'; el.appendChild(d) }); }
 
