@@ -142,6 +142,15 @@ html,body{height:100%;margin:0;background:var(--bg-main);color:var(--fg-text);tr
 .input,select{padding:10px;border:1px solid var(--border-grid);border-radius:6px;background:var(--entry-bg);width:100%}
 .small-muted{font-size:13px;color:var(--frase-fg)}
 
+/* ===== Imagem da câmera dentro do quadro do scanner (modo câmera ativo) ===== */
+#videoFrequencia{z-index:0;transition:opacity .25s ease}
+.scanner-frame.cam-on{overflow:hidden;justify-content:space-between}
+.scanner-frame.cam-on #videoFrequencia{opacity:1 !important}
+.scanner-frame .corner-tl,.scanner-frame .corner-tr,.scanner-frame .corner-bl,.scanner-frame .corner-br{z-index:2}
+.scanner-frame .scanner-crosshair,.scanner-frame .scanner-cam-pill,.scanner-frame .scanner-status-card{position:relative;z-index:2}
+.scanner-frame.cam-on .scanner-crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.85}
+.scanner-frame.cam-on .scanner-cam-pill{margin-top:0;background:rgba(13,20,16,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.scanner-frame.cam-on .scanner-status-card{margin-top:0;padding:16px 24px;background:rgba(21,48,29,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 /* ===== Pergunta "vai almoçar?" (aparece após registrar a presença) ===== */
 #almocoOverlay .almoco-box{background:var(--bg-card);border:1px solid var(--border-grid);border-radius:18px;padding:32px 36px;max-width:460px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.5)}
 .almoco-nome{font-size:15px;color:var(--frase-fg);margin-bottom:6px;font-weight:600}
@@ -1759,9 +1768,9 @@ async function openFrequencia(){ playUiSound('open'); document.getElementById('m
 function closeFrequencia(){ stopCameraFrequencia(); closeModal('modalFrequencia') }
 
 async function startCameraFrequencia(){
-  try{ const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); videoFreq.srcObject = stream; videoFreq.play(); document.getElementById('camStatusFreq').textContent = '🟢 Câmera ativa — aponte o QR Code'; scanningFreq=true; tickScanFrequencia(); }catch(e){ console.warn(e); document.getElementById('camStatusFreq').textContent = '⚠️ Câmera não disponível — use entrada manual'; scanningFreq=false; }
+  try{ const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); videoFreq.srcObject = stream; videoFreq.play(); const _fq = document.querySelector('#modalFrequencia .scanner-frame'); if(_fq) _fq.classList.add('cam-on'); document.getElementById('camStatusFreq').textContent = '🟢 Câmera ativa — aponte o QR Code'; scanningFreq=true; tickScanFrequencia(); }catch(e){ console.warn(e); document.getElementById('camStatusFreq').textContent = '⚠️ Câmera não disponível — use entrada manual'; scanningFreq=false; const _fq2 = document.querySelector('#modalFrequencia .scanner-frame'); if(_fq2) _fq2.classList.remove('cam-on'); }
 }
-function stopCameraFrequencia(){ scanningFreq=false; try{ const s = videoFreq.srcObject; if(s){ s.getTracks().forEach(t=>t.stop()); videoFreq.srcObject=null }}catch(e){} }
+function stopCameraFrequencia(){ scanningFreq=false; const _fq = document.querySelector('#modalFrequencia .scanner-frame'); if(_fq) _fq.classList.remove('cam-on'); try{ const s = videoFreq.srcObject; if(s){ s.getTracks().forEach(t=>t.stop()); videoFreq.srcObject=null }}catch(e){} }
 function tickScanFrequencia(){ if(!scanningFreq) return; if(videoFreq.readyState===videoFreq.HAVE_ENOUGH_DATA){ canvasFreq.width = videoFreq.videoWidth; canvasFreq.height = videoFreq.videoHeight; ctxFreq.drawImage(videoFreq,0,0,canvasFreq.width,canvasFreq.height); const img = ctxFreq.getImageData(0,0,canvasFreq.width,canvasFreq.height); const code = jsQR(img.data, img.width, img.height); if(code && code.data){ processScanFrequencia(code.data); } }
   requestAnimationFrame(tickScanFrequencia);
 }
